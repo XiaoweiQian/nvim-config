@@ -34,7 +34,6 @@ return {
       { "<leader>o", "<cmd>Outline<CR>", desc = "Toggle outline" },
     },
     opts = {
-      -- Your setup opts here
     },
   },
 }
