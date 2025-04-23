@@ -1,0 +1,86 @@
+-- ========================================================================== --
+-- ==                           GLOBAL SETTINGS                          == --
+-- ========================================================================== --
+
+-- 基本设置
+vim.opt.tabstop = 4
+vim.opt.shiftwidth = 4 
+vim.opt.number = true
+vim.opt.mouse = 'a'
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
+vim.opt.hlsearch = false
+vim.opt.wrap = true
+vim.opt.expandtab = false
+vim.opt.breakindent = true
+vim.opt.cursorline = true
+
+-- Some servers have issues with backup files, see #649
+vim.opt.backup = false
+vim.opt.writebackup = false
+
+-- Having longer updatetime (default is 4000 ms = 4s) leads to noticeable
+-- delays and poor user experience
+vim.opt.updatetime = 300
+
+-- Always show the signcolumn, otherwise it would shift the text each time
+-- diagnostics appeared/became resolved
+vim.opt.signcolumn = "yes"
+
+-- set termguicolors to enable highlight groups
+vim.opt.termguicolors = true
+
+local opts = { noremap=true, silent=true }
+
+-- disable netrw at the very start of your init.lua
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
+-- 全局 leader
+vim.g.mapleader = ","
+--vim.g.maplocalleader = ","
+
+-- 全局键映射
+vim.keymap.set("n", "<leader>tt", ":w | !cargo tauri dev<CR>", { desc = "Run Tauri Dev" })
+vim.keymap.set("n", "<leader>rr", ":w | !cargo run<CR>", { desc = "Run Cargo" })
+vim.keymap.set("n", "<leader>cf", ":RustFmt<CR>", { desc = "Format Rust Code" })
+vim.keymap.set("n", "<leader>w", ":w<CR>", { desc = "Save File" })
+vim.keymap.set("n", "<leader>q", ":q<CR>", { desc = "Quit" })
+
+vim.keymap.set({'n', 'x'}, 'gy', '"+y') -- copy
+vim.keymap.set({'n', 'x'}, 'gp', '"+p') -- paste
+vim.keymap.set("n", "Y", "yy")
+
+vim.keymap.set({'n', 'x', 'o'}, '<C-j>', '<C-W>j')
+vim.keymap.set({'n', 'x', 'o'}, '<C-k>', '<C-W>k')
+vim.keymap.set({'n', 'x', 'o'}, '<C-h>', '<C-W>h')
+vim.keymap.set({'n', 'x', 'o'}, '<C-l>', '<C-W>l')
+
+
+-- ========================================================================== --
+-- ==                           LAZY PLUGINS                            == --
+-- ========================================================================== --
+
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable",
+    lazypath,
+  })
+end
+vim.opt.rtp:prepend(lazypath)
+
+require("lazy").setup({
+  { import = "plugins" },
+}, {
+  performance = {
+    rtp = {
+      disabled_plugins = { "netrw", "netrwPlugin" }, -- 禁用 netrw，避免与 nvim-tree 冲突
+    },
+  },
+})
+
