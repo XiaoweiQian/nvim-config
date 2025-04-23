@@ -7,12 +7,12 @@ return {
     { "<leader>fg", "<cmd>Telescope live_grep<CR>", desc = "Live Grep" },
     { "<leader>fb", "<cmd>Telescope buffers<CR>", desc = "Find Buffers" },
     { "<leader>fc", "<cmd>Telescope grep_string<CR>", desc = "Grep Current Word" },
-    { "<leader>fh", "<cmd>Telescope help_tags<CR>", desc = "Grep Current Word" },
-    { "<leader>gd", "<cmd>Telescope lsp_definitions<CR>", desc = "Grep Current Word" },
-    { "<leader>gi", "<cmd>Telescope lsp_implementations<CR>", desc = "Grep Current Word" },
-    { "<leader>gr", "<cmd>Telescope lsp_references<CR>", desc = "Grep Current Word" },
-    { "<leader>gD", "<cmd>Telescope lsp_type_definitions<CR>", desc = "Grep Current Word" },
-    { "<leader>ge", "<cmd>Telescope diagnostics<CR>", desc = "Grep Current Word" },
+    { "<leader>fh", "<cmd>Telescope help_tags<CR>", desc = "Grep Help Doc" },
+    { "<leader>gd", "<cmd>Telescope lsp_definitions<CR>", desc = "Goto defi" },
+    { "<leader>gi", "<cmd>Telescope lsp_implementations<CR>", desc = "Goto impl" },
+    { "<leader>gr", "<cmd>Telescope lsp_references<CR>", desc = "Goto refer" },
+    { "<leader>gD", "<cmd>Telescope lsp_type_definitions<CR>", desc = "Goto  type defi" },
+    { "<leader>ge", "<cmd>Telescope diagnostics<CR>", desc = "List error" },
   } },
   -- 快速移动
   { "folke/flash.nvim", event = "VeryLazy", opts = {}, 
@@ -34,6 +34,7 @@ return {
       { "<leader>o", "<cmd>Outline<CR>", desc = "Toggle outline" },
     },
     opts = {
+      -- Your setup opts here
     },
   },
 }

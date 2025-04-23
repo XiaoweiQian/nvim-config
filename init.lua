@@ -38,6 +38,7 @@ vim.g.loaded_netrwPlugin = 1
 
 -- 全局 leader
 vim.g.mapleader = ","
+--vim.g.maplocalleader = ","
 
 -- 全局键映射
 vim.keymap.set("n", "<leader>tt", ":w | !cargo tauri dev<CR>", { desc = "Run Tauri Dev" })

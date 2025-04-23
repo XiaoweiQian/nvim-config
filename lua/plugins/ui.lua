@@ -45,8 +45,8 @@ return {
   end, keys = {
     { "<leader>bb", "<cmd>BufferPick<CR>", desc = "Pick Buffer" },
     { "<leader>bc", "<cmd>BufferClose<CR>", desc = "Close Buffer" },
-    { "<leader>bn", "<cmd>BufferNext<CR>", desc = "Pick Buffer" },
-    { "<leader>bp", "<cmd>BufferPrevious<CR>", desc = "Close Buffer" },
+    { "<leader>bn", "<cmd>BufferNext<CR>", desc = "Next Buffer" },
+    { "<leader>bp", "<cmd>BufferPrevious<CR>", desc = "Previous Buffer" },
   } },
   { "folke/tokyonight.nvim", lazy = true },
   { "navarasu/onedark.nvim", lazy = true },
