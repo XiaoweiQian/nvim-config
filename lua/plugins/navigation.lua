@@ -1,5 +1,23 @@
 return {
-  { "nvim-tree/nvim-tree.lua", event = "VimEnter", config = function() require("nvim-tree").setup({ update_focused_file = { enable = true } }) end, keys = { { "<leader>e", ":NvimTreeOpen<CR>", desc = "Open NvimTree" } } },
+  { "nvim-tree/nvim-tree.lua", event = "VimEnter", config = function() require("nvim-tree").setup({ 
+    hijack_cursor = true,
+    sync_root_with_cwd = true,
+    update_focused_file = {
+      enable = true,
+      ignore_list = { "help" },
+    },
+    diagnostics = {
+      enable = true,
+      show_on_dirs = true,
+    },
+    filters = {
+      custom = {
+        "^.git$",
+      },
+    },
+    }) end, 
+    keys = { { "<leader>e", ":NvimTreeOpen<CR>", desc = "Open NvimTree" } } 
+  },
   { "nvim-telescope/telescope.nvim", dependencies = { "nvim-lua/plenary.nvim" }, event = "VeryLazy", config = function()
     require("telescope").setup({})
   end, keys = {

@@ -41,11 +41,7 @@ vim.g.mapleader = ","
 --vim.g.maplocalleader = ","
 
 -- 全局键映射
-vim.keymap.set("n", "<leader>tt", ":w | !cargo tauri dev<CR>", { desc = "Run Tauri Dev" })
-vim.keymap.set("n", "<leader>rr", ":w | !cargo run<CR>", { desc = "Run Cargo" })
 vim.keymap.set("n", "<leader>cf", ":RustFmt<CR>", { desc = "Format Rust Code" })
-vim.keymap.set("n", "<leader>w", ":w<CR>", { desc = "Save File" })
-vim.keymap.set("n", "<leader>q", ":q<CR>", { desc = "Quit" })
 
 vim.keymap.set({'n', 'x'}, 'gy', '"+y') -- copy
 vim.keymap.set({'n', 'x'}, 'gp', '"+p') -- paste
@@ -55,6 +51,7 @@ vim.keymap.set({'n', 'x', 'o'}, '<C-j>', '<C-W>j')
 vim.keymap.set({'n', 'x', 'o'}, '<C-k>', '<C-W>k')
 vim.keymap.set({'n', 'x', 'o'}, '<C-h>', '<C-W>h')
 vim.keymap.set({'n', 'x', 'o'}, '<C-l>', '<C-W>l')
+vim.opt.splitright = true
 
 
 -- ========================================================================== --

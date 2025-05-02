@@ -6,14 +6,19 @@ return {
     local capabilities = require("cmp_nvim_lsp").default_capabilities()
     require("lspconfig").rust_analyzer.setup({ capabilities = capabilities })
     require("lspconfig").ts_ls.setup({ capabilities = capabilities })
-
-    local signs = { Error = "", Warn = "", Hint = " ", Info = "" }
-    for type, icon in pairs(signs) do
-      local hl = "DiagnosticSign" .. type
-      vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
-    end
-
   end },
+
+  --lsp 功能优化
+  {
+      'nvimdev/lspsaga.nvim',
+      config = function()
+          require('lspsaga').setup({})
+      end,
+      keys = {
+        { "[e", "<cmd>Lspsaga diagnostic_jump_next<CR>", desc = "Next Error" },
+      },
+  },
+
 
   -- lsp 进度浮窗提示
   { "j-hui/fidget.nvim", tag = "legacy", opts = {} },
