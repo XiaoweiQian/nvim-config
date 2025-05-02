@@ -13,19 +13,4 @@ return {
   { "tpope/vim-sleuth", event = "BufReadPost" },
   -- 括号自动补全
   { "windwp/nvim-autopairs", event = "InsertEnter", opts = {} },
-  -- ai 自动补全
-  --[[
-  {
-    "Exafunction/windsurf.vim",
-    event = "VeryLazy",
-    config = function()
-        require("codeium").setup({
-        })
-    end
-    keys = {
-      { "<leader>ce", ":CodeiumEnable<CR>", desc = "Enable Codeium" },
-      { "<leader>cd", ":CodeiumDisable<CR>", desc = "Disable Codeium" },
-    },
-  },
-  --]] 
 }

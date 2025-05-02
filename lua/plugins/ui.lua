@@ -1,4 +1,14 @@
 return {
+  { "rebelot/kanagawa.nvim", 
+    lazy = false, -- 确保主题立即加载
+    priority = 1000, -- 优先级高，确保主题在其他插件之前加载
+    config = function() 
+      require("kanagawa").setup({
+        compile = true,
+      })
+      require("kanagawa").load("wave")
+    end,
+  },
   -- 导航条跳转
   { "Bekaboo/dropbar.nvim", event = "BufReadPost", keys = { { "<leader>db", "<cmd>lua require('dropbar.api').pick()<CR>", desc = "Pick Dropbar" } } },
 
@@ -48,7 +58,4 @@ return {
     { "<leader>bn", "<cmd>BufferNext<CR>", desc = "Next Buffer" },
     { "<leader>bp", "<cmd>BufferPrevious<CR>", desc = "Previous Buffer" },
   } },
-  { "folke/tokyonight.nvim", lazy = true },
-  { "navarasu/onedark.nvim", lazy = true },
-  { "rebelot/kanagawa.nvim", config = function() vim.cmd.colorscheme("kanagawa-wave") end },
 }

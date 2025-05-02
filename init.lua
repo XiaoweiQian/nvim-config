@@ -14,6 +14,7 @@ vim.opt.wrap = true
 vim.opt.expandtab = false
 vim.opt.breakindent = true
 vim.opt.cursorline = true
+vim.o.background = "dark"
 
 -- Some servers have issues with backup files, see #649
 vim.opt.backup = false
