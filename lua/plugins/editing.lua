@@ -1,4 +1,19 @@
 return {
+  -- 平滑滑动
+  { "karb94/neoscroll.nvim", 
+    config = function() 
+      require("neoscroll").setup({ mappings = {} }) 
+      neoscroll = require('neoscroll')
+      local keymap = {
+        ["<C-b>"] = function() neoscroll.ctrl_b({ duration = 250 }) end;
+        ["<C-f>"] = function() neoscroll.ctrl_f({ duration = 250 }) end;
+      }
+      local modes = { 'n', 'v', 'x' }
+      for key, func in pairs(keymap) do
+        vim.keymap.set(modes, key, func)
+      end
+    end 
+  },
   -- 批量注释,3gcc 3gbc
   { "numToStr/Comment.nvim", event = "BufReadPost", opts = {}, keys = { { "<leader>/", "<cmd>lua require('Comment.api').toggle.linewise.current()<CR>", desc = "Toggle Comment" } } },
   -- 指向同名方法和变量，方便跳转

@@ -4,8 +4,8 @@ return {
   -- lsp 默认插件配置
   { "neovim/nvim-lspconfig", config = function()
     local capabilities = require("cmp_nvim_lsp").default_capabilities()
-    require("lspconfig").rust_analyzer.setup({ capabilities = capabilities })
-    require("lspconfig").ts_ls.setup({ capabilities = capabilities })
+    require("lspconfig").rust_analyzer.setup({ capabilities = capabilities,include_declaration = false })
+    require("lspconfig").ts_ls.setup({ capabilities = capabilities,include_declaration = false })
   end },
 
   --lsp 功能优化

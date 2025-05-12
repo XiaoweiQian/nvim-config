@@ -1,22 +1,19 @@
-local prompts = {
-  -- Code related prompts
-  Explain = "Please explain how the following code works.",
-  Review = "Please review the following code and provide suggestions for improvement.",
-  Tests = "Please explain how the selected code works, then generate unit tests for it.",
-  Refactor = "Please refactor the following code to improve its clarity and readability.",
-  FixCode = "Please fix the following code to make it work as intended.",
-  FixError = "Please explain the error in the following text and provide a solution.",
-  BetterNamings = "Please provide better names for the following variables and functions.",
-  Documentation = "Please provide documentation for the following code.",
-  SwaggerApiDocs = "Please provide documentation for the following API using Swagger.",
-  SwaggerJsDocs = "Please write JSDoc for the following API using Swagger.",
-  -- Text related prompts
-  Summarize = "Please summarize the following text.",
-  Spelling = "Please correct any grammar and spelling errors in the following text.",
-  Wording = "Please improve the grammar and wording of the following text.",
-  Concise = "Please rewrite the following text to make it more concise.",
-}
+local system_prompt_info = [[
+你是 TauriDevPro，一位精通以下技术的全栈开发专家：
+- 核心: Tauri 2.0
+- 前端: React (TSX, Functional Components, Hooks), Vite, TypeScript
+- UI: shadcn/ui (首选), TailwindCSS (自定义/补充)
+- 路由: react-router-dom v6+
+- 后端交互: 优先使用 Tauri TypeScript 插件 (@tauri-apps/plugin-*), 其次是 Rust `invoke`.
 
+任务指令：
+1. UI实现：必须优先使用官方 shadcn/ui 组件。若需自定义或 shadcn/ui 未覆盖，则使用 TailwindCSS。
+2. 后端交互：必须优先使用 Tauri TypeScript 插件。若插件不适用，再考虑 `invoke`。
+3. 代码：提供类型安全 (TypeScript)、遵循 React 最佳实践的可读代码。
+4. 解释：简明扼要地解释关键实现和选择。
+
+请基于此技术栈和偏好回应后续所有编程请求。
+]]
 
 return {
   {
@@ -36,176 +33,6 @@ return {
       require("copilot_cmp").setup()
     end
   },
-  {
-    "CopilotC-Nvim/CopilotChat.nvim",
-    dependencies = {
-      { "zbirenbaum/copilot.lua" }, -- or zbirenbaum/copilot.lua
-      { "nvim-lua/plenary.nvim", branch = "master" }, -- for curl, log and async functions
-    },
-    build = "make tiktoken", -- Only on MacOS or Linux
-    opts = {
-      question_header = "## User ",
-      answer_header = "## Copilot ",
-      error_header = "## Error ",
-      prompts = prompts,
-      model = "claude-3.5-sonnet",
-      mappings = {
-        -- Use tab for completion
-        complete = {
-          detail = "Use @<Tab> or /<Tab> for options.",
-          insert = "<Tab>",
-        },
-        -- Close the chat
-        close = {
-          normal = "q",
-          insert = "<C-c>",
-        },
-        -- Reset the chat buffer
-        reset = {
-          normal = "<C-x>",
-          insert = "<C-x>",
-        },
-        -- Submit the prompt to Copilot
-        submit_prompt = {
-          normal = "<CR>",
-          insert = "<C-CR>",
-        },
-        -- Accept the diff
-        accept_diff = {
-          normal = "<C-y>",
-          insert = "<C-y>",
-        },
-        -- Show help
-        show_help = {
-          normal = "g?",
-        },
-      },
-    },
-    config = function(_, opts)
-      local chat = require("CopilotChat")
-      chat.setup(opts)
-
-      local select = require("CopilotChat.select")
-      vim.api.nvim_create_user_command("CopilotChatVisual", function(args)
-        chat.ask(args.args, { selection = select.visual })
-      end, { nargs = "*", range = true })
-
-      -- Inline chat with Copilot
-      vim.api.nvim_create_user_command("CopilotChatInline", function(args)
-        chat.ask(args.args, {
-          selection = select.visual,
-          window = {
-            layout = "float",
-            relative = "cursor",
-            width = 1,
-            height = 0.4,
-            row = 1,
-          },
-        })
-      end, { nargs = "*", range = true })
-
-      -- Restore CopilotChatBuffer
-      vim.api.nvim_create_user_command("CopilotChatBuffer", function(args)
-        chat.ask(args.args, { selection = select.buffer })
-      end, { nargs = "*", range = true })
-
-      -- Custom buffer for CopilotChat
-      vim.api.nvim_create_autocmd("BufEnter", {
-        pattern = "copilot-*",
-        callback = function()
-          vim.opt_local.relativenumber = true
-          vim.opt_local.number = true
-
-          -- Get current filetype and set it to markdown if the current filetype is copilot-chat
-          local ft = vim.bo.filetype
-          if ft == "copilot-chat" then
-            vim.bo.filetype = "markdown"
-          end
-        end,
-      })
-    end,
-    event = "VeryLazy",
-    keys = {
-      -- Show prompts actions with telescope
-      {
-        "<leader>ap",
-        function()
-          require("CopilotChat").select_prompt({
-            context = {
-              "buffers",
-            },
-          })
-        end,
-        desc = "CopilotChat - Prompt actions",
-      },
-      {
-        "<leader>ap",
-        function()
-          require("CopilotChat").select_prompt()
-        end,
-        mode = "x",
-        desc = "CopilotChat - Prompt actions",
-      },
-      -- Code related commands
-      { "<leader>ae", "<cmd>CopilotChatExplain<cr>", desc = "CopilotChat - Explain code" },
-      { "<leader>at", "<cmd>CopilotChatTests<cr>", desc = "CopilotChat - Generate tests" },
-      { "<leader>ar", "<cmd>CopilotChatReview<cr>", desc = "CopilotChat - Review code" },
-      { "<leader>aR", "<cmd>CopilotChatRefactor<cr>", desc = "CopilotChat - Refactor code" },
-      { "<leader>an", "<cmd>CopilotChatBetterNamings<cr>", desc = "CopilotChat - Better Naming" },
-      -- Chat with Copilot in visual mode
-      {
-        "<leader>av",
-        ":CopilotChatVisual",
-        mode = "x",
-        desc = "CopilotChat - Open in vertical split",
-      },
-      {
-        "<leader>ax",
-        ":CopilotChatInline",
-        mode = "x",
-        desc = "CopilotChat - Inline chat",
-      },
-      -- Custom input for CopilotChat
-      {
-        "<leader>ai",
-        function()
-          local input = vim.fn.input("Ask Copilot: ")
-          if input ~= "" then
-            vim.cmd("CopilotChat " .. input)
-          end
-        end,
-        desc = "CopilotChat - Ask input",
-      },
-      -- Generate commit message based on the git diff
-      {
-        "<leader>am",
-        "<cmd>CopilotChatCommit<cr>",
-        desc = "CopilotChat - Generate commit message for all changes",
-      },
-      -- Quick chat with Copilot
-      {
-        "<leader>aq",
-        function()
-          local input = vim.fn.input("Quick Chat: ")
-          if input ~= "" then
-            vim.cmd("CopilotChatBuffer " .. input)
-          end
-        end,
-        desc = "CopilotChat - Quick chat",
-      },
-      -- Fix the issue with diagnostic
-      { "<leader>af", "<cmd>CopilotChatFixError<cr>", desc = "CopilotChat - Fix Diagnostic" },
-      -- Clear buffer and chat history
-      { "<leader>al", "<cmd>CopilotChatReset<cr>", desc = "CopilotChat - Clear buffer and chat history" },
-      -- Toggle Copilot Chat Vsplit
-      { "<leader>av", "<cmd>CopilotChatToggle<cr>", desc = "CopilotChat - Toggle" },
-      -- Copilot Chat Models
-      { "<leader>a?", "<cmd>CopilotChatModels<cr>", desc = "CopilotChat - Select Models" },
-      -- Copilot Chat Agents
-      { "<leader>aa", "<cmd>CopilotChatAgents<cr>", desc = "CopilotChat - Select Agents" },
-    },
-  },
-
 
   { 
     "yetone/avante.nvim", 
@@ -214,7 +41,7 @@ return {
     opts = {
       -- gemini
       provider = "gemini",
-      system_prompt = nil,
+      system_prompt = system_prompt_info,
       rag_service = {
         enabled = false, -- Enables the rag service, requires OPENAI_API_KEY to be set
         host_mount = os.getenv("HOME"), -- Host mount path for the rag service (docker will mount this path)
@@ -227,9 +54,9 @@ return {
       },
       gemini= {
           --model = 'gemini-2.5-flash-preview-04-17',
-          model = 'gemini-2.5-pro-preview-03-25',
+          model = 'gemini-2.5-pro-preview-05-06',
           proxy = "http://127.0.0.1:6152", -- proxy support, e.g., http://127.0.0.1:7890
-          timeout = 3000000,
+          timeout = 30000000,
           temperature = 0,
           max_tokens = 1000000,
         },
@@ -240,11 +67,19 @@ return {
       "stevearc/dressing.nvim", 
       "nvim-lua/plenary.nvim", 
       "MunifTanjim/nui.nvim", 
+      "nvim-telescope/telescope.nvim", -- for file_selector provider telescope
+      "hrsh7th/nvim-cmp", -- autocompletion for avante commands and mentions
+      "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
     }, 
     keys = {
-      { "<leader>ja", ":AvanteAsk<CR>", desc = "Ask Avante" },
-      { "<leader>je", ":AvanteEdit<CR>", desc = "Edit with Avante" },
-      { "<leader>jr", ":AvanteRefresh<CR>", desc = "Refresh Avante" },
-    }
+      { "<leader>aa", ":AvanteAsk<CR>", desc = "Ask Avante" },
+      { "<leader>at", ":AvanteToggle<CR>", desc = "toggle Avante" },
+      { "<leader>ae", ":AvanteEdit<CR>", desc = "Edit with Avante" },
+      { "<leader>ar", ":AvanteRefresh<CR>", desc = "Refresh Avante" },
+      { "<leader>ac", ":AvanteClear<CR>", desc = "Clear Avante" },
+      { "<leader>an", ":AvanteChatNew<CR>", desc = "New Chat Avante" },
+      { "<leader>af", ":AvanteFocus<CR>", desc = "Focus Avante" },
+      { "<leader>ah", ":AvanteHistory<CR>", desc = "History Avante" },
+    },
   },
 }

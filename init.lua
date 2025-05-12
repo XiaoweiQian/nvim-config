@@ -44,6 +44,10 @@ vim.g.mapleader = ","
 -- 全局键映射
 vim.keymap.set("n", "<leader>cf", ":RustFmt<CR>", { desc = "Format Rust Code" })
 
+-- 连续缩进
+vim.keymap.set("v", ">", ">gv", { noremap = true })
+vim.keymap.set("v", "<", "<gv", { noremap = true })
+
 vim.keymap.set({'n', 'x'}, 'gy', '"+y') -- copy
 vim.keymap.set({'n', 'x'}, 'gp', '"+p') -- paste
 vim.keymap.set("n", "Y", "yy")

@@ -19,7 +19,18 @@ return {
     keys = { { "<leader>e", ":NvimTreeOpen<CR>", desc = "Open NvimTree" } } 
   },
   { "nvim-telescope/telescope.nvim", dependencies = { "nvim-lua/plenary.nvim" }, event = "VeryLazy", config = function()
-    require("telescope").setup({})
+    require("telescope").setup({
+      defaults = {
+        mappings = {
+          n = {
+              ['<c-d>'] = require('telescope.actions').delete_buffer
+          }, 
+          i = {
+            ['<c-d>'] = require('telescope.actions').delete_buffer
+          }
+        }
+      },
+    })
   end, keys = {
     { "<leader>ff", "<cmd>Telescope find_files<CR>", desc = "Find Files" },
     { "<leader>fg", "<cmd>Telescope live_grep<CR>", desc = "Live Grep" },
